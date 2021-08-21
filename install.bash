@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /bin/bash
 if [[ $(whoami) != "root" ]]; then
     echo "This script must be run as root."
     exit 1
@@ -18,7 +18,8 @@ if [[ -z $(command -v node) ]]; then
     echo "NodeJS is not installed, Installing..."
     curl -sL https://deb.nodesource.com/setup_12.x | bash >>dashactyl-script.log
     apt-get update >>dashactyl-script.log
-    apt-get install nodejs npm -y >>dashactyl-script.log
+    curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - >>dashactyl-script.log
+    apt-get install nodejs yarn -y >>dashactyl-script.log
 else
     echo "NodeJS is already installed, not installing it."
 fi
@@ -98,28 +99,28 @@ y | Yes | Y)
     json -I -f settings.json -e "this.api.client.ratelimits.requests=1"
     json -I -f settings.json -e "this.api.client.ratelimits.per second=1"
     read -r -p "Do you want to use arc.io? [Y/n] " arcioOPT
-        case "$arcioOPT" in
+    case "$arcioOPT" in
+    y | Yes | Y)
+        echo "Enabling arc.io"
+        read -r -p "What is your arc.io widget ID? " arcwidgetID
+        json -I -f settings.json -e "this.api.arcio.enabled=true"
+        json -I -f settings.json -e "this.api.arcio.widgetid='$arcwidgetID'"
+        read -r -p "Do you want to enable arc.io AFK page? [Y/n] " afkpageOPT
+        case "$afkpageOPT" in
         y | Yes | Y)
-            echo "Enabling arc.io"
-            read -r -p "What is your arc.io widget ID? " arcwidgetID
-            json -I -f settings.json -e "this.api.arcio.enabled=true"
-            json -I -f settings.json -e "this.api.arcio.widgetid='$arcwidgetID'"
-            read -r -p "Do you want to enable arc.io AFK page? [Y/n] " afkpageOPT
-            case "$afkpageOPT" in
-            y | Yes | Y)
-                echo "Enabling AFK Page"
-                json -I -f settings.json -e "this.api.arcio['afk page'].enabled=true"
-                echo "Users will earn 1 coin per minute, feel free to edit it in settings.json"
-                ;;
-            n | No | N)
-                echo ""
-                ;;
-            esac
+            echo "Enabling AFK Page"
+            json -I -f settings.json -e "this.api.arcio['afk page'].enabled=true"
+            echo "Users will earn 1 coin per minute, feel free to edit it in settings.json"
             ;;
         n | No | N)
             echo ""
             ;;
         esac
+        ;;
+    n | No | N)
+        echo ""
+        ;;
+    esac
     ;;
 n | No | N)
     echo "Not doing config"
@@ -130,7 +131,7 @@ case "$nginxreverseproxyOPT" in
 y | Yes | Y)
     echo "Nginx reverse proxy"
     echo "Installing Dependencies"
-    apt-get install -y certbot nginx >> dashactyl-script.log
+    apt-get install -y certbot nginx >>dashactyl-script.log
     systemctl start nginx
     read -r -p "What domain do you want to install dashactyl on? (Must not include http:// or https://) " nginxDOMAIN
     certboat=$(certbot certonly --nginx -d "$nginxDOMAIN")
@@ -152,7 +153,7 @@ n | No | N)
     echo "Not doing reverse proxy."
     ;;
 esac
-npm i -g pm2 >> dashactyl-script.log
+npm i -g pm2 >>dashactyl-script.log
 echo "Done! Dashactyl is now installed."
 cd /var/www/dashactyl || exit 1
 echo "Run pm2 start index.js to start dashactyl."
