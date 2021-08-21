@@ -81,7 +81,6 @@ y | Yes | Y)
         read -r -p "Discord Webhook URL? [Y/n] " discordwebhookURL
         json -I -f settings.json -e "this.api.client.webhook.webhook_url='$discordwebhookURL'"
         json -I -f settings.json -e "this.api.client.webhook.auditlogs.enabled=true"
-        json -I -f settings.json -e "this.api.client.ratelimits['per second']=1"
         ;;
     n | No | N)
         echo ""
@@ -97,7 +96,7 @@ y | Yes | Y)
     read -r -p "Discord oauth2 application url without the /callback? " discordappURL
     json -I -f settings.json -e "this.api.client.oauth2.id='$discordappURL'"
     json -I -f settings.json -e "this.api.client.ratelimits.requests=1"
-    json -I -f settings.json -e "this.api.client.ratelimits.per second=1"
+    json -I -f settings.json -e "this.api.client.ratelimits['per second']=1"
     read -r -p "Do you want to use arc.io? [Y/n] " arcioOPT
     case "$arcioOPT" in
     y | Yes | Y)
