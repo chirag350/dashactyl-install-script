@@ -1,5 +1,4 @@
 #! /bin/bash
-main() {
 if [[ $(whoami) != "root" ]]; then
     echo "This script must be run as root."
     exit 1
@@ -173,5 +172,3 @@ npm i -g pm2 >>dashactyl-script.log
 echo "Done! Dashactyl is now installed."
 cd /var/www/dashactyl || exit 1
 echo "Run pm2 start index.js to start dashactyl."
-}
-main
