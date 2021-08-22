@@ -29,7 +29,8 @@ cd /var/www/dashactyl || exit 1
 git clone https://github.com/real2two/dashactyl ./
 npm install --production
 npm i -g json >>dashactyl-script.log
-read -r -p "Do you want to do config using this script? [Y/n] " configOPT
+echo "Do you want to do config using this script? [Y/n] "
+read -r configOPT
 case "$configOPT" in
 y | Yes | Y)
     echo "Doing config"
@@ -40,11 +41,14 @@ y | Yes | Y)
         echo ''
     )
     sed -i "s/change this website session secret password, make sure to change this for your website's security/$secretKEY/" settings.json
-    read -r -p "What domain is your Pterodactyl Panel hosted on? " pterodactylDOMAIN
+    echo "What domain is your Pterodactyl Panel hosted on? "
+    read -r pterodactylDOMAIN
     sed -i "s/pterodactyl panel domain/$pterodactylDOMAIN/" settings.json
-    read -r -p "Please enter a pterodactyl panel admin/application api key with all permissions. " pterodactylAPIKEY
+    echo "Please enter a pterodactyl panel admin/application api key with all permissions. "
+    read -r pterodactylAPIKEY
     sed -i "s/pterodactyl panel admin api key with all read and writes/$pterodactylAPIKEY/" settings.json
-    read -r -p "Enable Dashactyl API? [y/N] " dashactylAPIQUESTION
+    echo "Enable Dashactyl API? [y/N] "
+    read -r dashactylAPIQUESTION
     case "$dashactylAPIQUESTION" in
     y | Yes | Y)
         echo "Enabling Dashactyl API"
@@ -61,24 +65,29 @@ y | Yes | Y)
         json -I -f settings.json -e "this.api.client.api.enabled=false"
         ;;
     esac
-    read -r -p "Discord Bot Token for Dashactyl? " discordBotTOKEN
+    echo "Discord Bot Token for Dashactyl? "
+    read -r discordBotTOKEN
     json -I -f settings.json -e "this.api.client.bot.token='$discordBotTOKEN'"
-    read -r -p "Do you want to enable Join Guild? [Y/n] " joinGUILDOPT
+    echo "Do you want to enable Join Guild? [Y/n] "
+    read -r joinGUILDOPT
     case "$joinGUILDOPT" in
     y | Yes | Y)
         json -I -f settings.json -e "this.api.client.bot.joinguild.enabled=true"
-        read -r -p "Guild ID you want to autojoin? " guildIDAJ
+        echo "Guild ID you want to autojoin? " 
+        read -r guildIDAJ
         json -I -f settings.json -e 'this.api.client.bot.joinguild.guildid=["'$guildIDAJ'"]'
         ;;
     n | No | N)
         echo ""
         ;;
     esac
-    read -r -p "Enable discord webhook logging? [Y/n] " discordloggingOPT
+    echo "Enable discord webhook logging? [Y/n] "
+    read -r discordloggingOPT
     case "$discordloggingOPT" in
     y | Yes | Y)
         echo "Enabling Discord webhook logging..."
-        read -r -p "Discord Webhook URL? [Y/n] " discordwebhookURL
+        echo "Discord Webhook URL? [Y/n] "
+        read -r discordwebhookURL
         json -I -f settings.json -e "this.api.client.webhook.webhook_url='$discordwebhookURL'"
         json -I -f settings.json -e "this.api.client.webhook.auditlogs.enabled=true"
         ;;
@@ -89,22 +98,27 @@ y | Yes | Y)
     echo "You must setup locations, packages and store yourself."
     json -I -f settings.json -e "this.api.client.passwordgenerator.signup=true"
     json -I -f settings.json -e "this.api.client.passwordgenerator.length=16"
-    read -r -p "Discord oauth2 application ID? " discordappID
+    read -r discordappID
     json -I -f settings.json -e "this.api.client.oauth2.id='$discordappID'"
-    read -r -p "Discord oauth2 application Secret? " discordappSECRET
+    echo "Discord oauth2 application Secret? "
+    read -r discordappSECRET
     json -I -f settings.json -e "this.api.client.oauth2.id='$discordappSECRET'"
-    read -r -p "Discord oauth2 application url without the /callback? " discordappURL
+    echo "Discord oauth2 application url without the /callback? "
+    read -r discordappURL
     json -I -f settings.json -e "this.api.client.oauth2.id='$discordappURL'"
     json -I -f settings.json -e "this.api.client.ratelimits.requests=1"
     json -I -f settings.json -e "this.api.client.ratelimits['per second']=1"
-    read -r -p "Do you want to use arc.io? [Y/n] " arcioOPT
+    echo "Do you want to use arc.io? [Y/n] "
+    read -r arcioOPT
     case "$arcioOPT" in
     y | Yes | Y)
         echo "Enabling arc.io"
-        read -r -p "What is your arc.io widget ID? " arcwidgetID
+        echo "What is your arc.io widget ID? "
+        read -r arcwidgetID
         json -I -f settings.json -e "this.api.arcio.enabled=true"
         json -I -f settings.json -e "this.api.arcio.widgetid='$arcwidgetID'"
-        read -r -p "Do you want to enable arc.io AFK page? [Y/n] " afkpageOPT
+        echo "Do you want to enable arc.io AFK page? [Y/n] "
+        read -r afkpageOPT
         case "$afkpageOPT" in
         y | Yes | Y)
             echo "Enabling AFK Page"
@@ -125,14 +139,16 @@ n | No | N)
     echo "Not doing config"
     ;;
 esac
-read -r -p "Setup NGINX Reverse Proxy? [Y/n] " nginxreverseproxyOPT
+echo "Setup NGINX Reverse Proxy? [Y/n] "
+read -r nginxreverseproxyOPT
 case "$nginxreverseproxyOPT" in
 y | Yes | Y)
     echo "Nginx reverse proxy"
     echo "Installing Dependencies"
     apt-get install -y certbot nginx >>dashactyl-script.log
     systemctl start nginx
-    read -r -p "What domain do you want to install dashactyl on? (Must not include http:// or https://) " nginxDOMAIN
+    echo "What domain do you want to install dashactyl on? (Must not include http:// or https://) "
+    read -r nginxDOMAIN
     certboat=$(certbot certonly --nginx -d "$nginxDOMAIN")
     if [[ "$certboat" == *"Congratulations! Your certificate and chain"* ]]; then
         echo "SSL was done successfully."
