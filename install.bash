@@ -43,6 +43,10 @@ y | Yes | Y)
     sed -i "s/change this website session secret password, make sure to change this for your website's security/$secretKEY/" settings.json
     echo "What domain is your Pterodactyl Panel hosted on? "
     read -r pterodactylDOMAIN
+    if [[ "$pterodactylDOMAIN" == *".cf" || "$pterodactylDOMAIN" == *".ml" || "$pterodactylDOMAIN" == *".tk" || "$pterodactylDOMAIN" == *".ga" || "$pterodactylDOMAIN" == *".gq" ]]; then
+        echo "nah, you ain't using a freenom domain."
+        exit 1
+    fi
     sed -i "s/pterodactyl panel domain/$pterodactylDOMAIN/" settings.json
     echo "Please enter a pterodactyl panel admin/application api key with all permissions. "
     read -r pterodactylAPIKEY
@@ -149,6 +153,10 @@ y | Yes | Y)
     systemctl start nginx
     echo "What domain do you want to install dashactyl on? (Must not include http:// or https://) "
     read -r nginxDOMAIN
+    if [[ "$nginxDOMAIN" == *".cf" || "$nginxDOMAIN" == *".ml" || "$nginxDOMAIN" == *".tk" || "$nginxDOMAIN" == *".ga" || "$nginxDOMAIN" == *".gq" ]]; then
+        echo "nah, you ain't using a freenom domain."
+        exit 1
+    fi
     certboat=$(certbot certonly --nginx -d "$nginxDOMAIN")
     if [[ "$certboat" == *"Congratulations! Your certificate and chain"* ]]; then
         echo "SSL was done successfully."
