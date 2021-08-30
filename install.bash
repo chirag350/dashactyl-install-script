@@ -44,7 +44,7 @@ y | Yes | Y)
     echo "What domain is your Pterodactyl Panel hosted on? "
     read -r pterodactylDOMAIN
     if [[ "$pterodactylDOMAIN" == *".cf" || "$pterodactylDOMAIN" == *".ml" || "$pterodactylDOMAIN" == *".tk" || "$pterodactylDOMAIN" == *".ga" || "$pterodactylDOMAIN" == *".gq" ]]; then
-        echo "nah, you ain't using a freenom domain."
+        echo "Nah fam, You're not using a shitty freenom domain for your shitty host."
         exit 1
     fi
     sed -i "s/pterodactyl panel domain/$pterodactylDOMAIN/" settings.json
@@ -154,7 +154,7 @@ y | Yes | Y)
     echo "What domain do you want to install dashactyl on? (Must not include http:// or https://) "
     read -r nginxDOMAIN
     if [[ "$nginxDOMAIN" == *".cf" || "$nginxDOMAIN" == *".ml" || "$nginxDOMAIN" == *".tk" || "$nginxDOMAIN" == *".ga" || "$nginxDOMAIN" == *".gq" ]]; then
-        echo "nah, you ain't using a freenom domain."
+        echo "Nah fam, You're not using a shitty freenom domain for your shitty host."
         exit 1
     fi
     certboat=$(certbot certonly --nginx -d "$nginxDOMAIN")
