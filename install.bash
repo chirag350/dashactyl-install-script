@@ -4,7 +4,7 @@ if [[ $(whoami) != "root" ]]; then
     exit 1
 fi
 DISTRO=$(awk -F= '/^NAME/{print $2}' /etc/os-release)
-if [[ ${DISTRO} != '"Ubuntu"' && ${DISTRO} != '"Debian"' ]]; then
+if [[ ${DISTRO} != '"Ubuntu"' && ${DISTRO} != '"Debian GNU/Linux"' ]]; then
     echo "This script is for ubuntu and debian only."
     exit 1
 fi
