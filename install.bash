@@ -90,7 +90,7 @@ y | Yes | Y)
     case "$discordloggingOPT" in
     y | Yes | Y)
         echo "Enabling Discord webhook logging..."
-        echo "Discord Webhook URL? [Y/n] "
+        echo "Discord Webhook URL? "
         read -r discordwebhookURL
         json -I -f settings.json -e "this.api.client.webhook.webhook_url='$discordwebhookURL'"
         json -I -f settings.json -e "this.api.client.webhook.auditlogs.enabled=true"
