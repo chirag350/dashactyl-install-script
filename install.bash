@@ -26,7 +26,7 @@ fi
 echo "Installing dashactyl in /var/www/dashactyl"
 mkdir /var/www/dashactyl
 cd /var/www/dashactyl || exit 1
-git clone https://github.com/real2two/dashactyl ./
+git clone https://github.com/Dashactyl-Development/Dashactyl-0.4 ./
 npm install --production
 npm i -g json >>dashactyl-script.log
 echo "Do you want to do config using this script? [Y/n] "
